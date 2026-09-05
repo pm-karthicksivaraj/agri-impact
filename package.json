@@ -2,7 +2,7 @@
   "name": "agri-impact",
   "version": "0.1.0",
   "private": true,
-  "description": "AgriImpact \u2014 precision irrigation advisories on live weather with MRV-grade water, energy, carbon and yield impact measurement.",
+  "description": "AgriImpact — precision irrigation advisories on live weather with MRV-grade water, energy, carbon and yield impact measurement.",
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build",
@@ -63,6 +63,7 @@
     "recharts": "^2.15.4",
     "sonner": "^2.0.6",
     "tailwind-merge": "^3.3.1",
+    "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.2",
     "z-ai-web-dev-sdk": "^0.0.18",
     "zod": "^4.0.2",
@@ -71,6 +72,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/leaflet": "^1.9.22",
+    "@types/node": "26.4.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

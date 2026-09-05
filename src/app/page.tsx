@@ -210,8 +210,8 @@ export default function Page() {
       <footer className="mt-auto border-t border-border bg-card/50">
         <div className="mx-auto max-w-7xl px-3 sm:px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-[10px] text-muted-foreground">
           <p>
-            agriimpact_ · precision irrigation with measured impact · weather by Open-Meteo · maps by
-            OpenStreetMap (openstreetmap.de) · model fao56-dualbucket-v1
+            agriimpact_ · precision irrigation with measured impact · weather by Open-Meteo · satellite
+            imagery by Esri World Imagery (Maxar, Earthstar Geographics) · model fao56-dualbucket-v1
           </p>
           <button
             className="flex items-center gap-1 hover:text-foreground transition-colors"

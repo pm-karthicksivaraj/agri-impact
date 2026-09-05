@@ -78,10 +78,11 @@ function FitFields({ fields, selectedId }: { fields: FieldListItem[]; selectedId
 }
 
 const TONE_FILL: Record<string, { color: string; fillOpacity: number }> = {
-  good: { color: "#2E7F25", fillOpacity: 0.22 },
-  near: { color: "#C9971E", fillOpacity: 0.25 },
-  stressed: { color: "#B3491F", fillOpacity: 0.28 },
-  unknown: { color: "#8B9683", fillOpacity: 0.2 },
+  // slightly stronger fills than on a street map so tones stay readable over satellite photos
+  good: { color: "#2E7F25", fillOpacity: 0.3 },
+  near: { color: "#C9971E", fillOpacity: 0.33 },
+  stressed: { color: "#B3491F", fillOpacity: 0.36 },
+  unknown: { color: "#8B9683", fillOpacity: 0.28 },
 };
 
 export default function MapCanvas({
@@ -101,9 +102,11 @@ export default function MapCanvas({
   onComplete: () => void;
   onFieldSelect: (id: string) => void;
 }) {
-  // keyless tile provider: German OSM mirror (real OSM data, global coverage).
-  // Dark mode is handled by a CSS filter on the tile images (see globals.css).
-  const tileUrl = "https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png";
+  // Satellite basemap: Esri World Imagery — keyless, global, real satellite/aerial photos so
+  // roads, buildings and crop fields are visually distinguishable when drawing polygons.
+  // NOTE: Esri's tile URL uses {z}/{y}/{x} order and needs no subdomains.
+  // Dark mode is handled by a subtle dim filter on the tile images (see globals.css).
+  const tileUrl = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
 
   const center = useMemo<LatLngTuple>(() => [14.6, 107.5], []);
 
@@ -115,10 +118,9 @@ export default function MapCanvas({
       scrollWheelZoom
     >
       <TileLayer
-        key="osmde"
+        key="esri-satellite"
         url={tileUrl}
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors · tiles: openstreetmap.de'
-        subdomains="abc"
+        attribution='Imagery &copy; <a href="https://www.esri.com/">Esri</a>, Maxar, Earthstar Geographics &amp; the GIS User Community'
         maxZoom={19}
       />
       <MapEvents drawing={drawing} vertices={vertices} onVertexAdd={onVertexAdd} onComplete={onComplete} />
@@ -134,10 +136,9 @@ export default function MapCanvas({
             positions={f.polygon as [number, number][]}
             pathOptions={{
               color: t.color,
-              weight: selected ? 3.5 : 2,
+              weight: selected ? 4 : 2.5,
               fillColor: t.color,
               fillOpacity: t.fillOpacity,
-              dashArray: selected ? undefined : undefined,
             }}
             eventHandlers={{ click: () => onFieldSelect(f.id) }}
           >
@@ -155,19 +156,19 @@ export default function MapCanvas({
       {vertices.length > 0 ? (
         <Polyline
           positions={[...vertices, vertices[0]]}
-          pathOptions={{ color: "#2E7F25", weight: 2.5, dashArray: "6 6" }}
+          pathOptions={{ color: "#A6E39B", weight: 3, dashArray: "7 7" }}
         />
       ) : null}
       {vertices.map((v, i) => (
         <CircleMarker
           key={`v-${i}-${v[0]},${v[1]}`}
           center={v}
-          radius={5}
+          radius={5.5}
           pathOptions={{
-            color: i === 0 && vertices.length >= 3 ? "#B3491F" : "#17220F",
-            fillColor: "#2E7F25",
+            color: "#FFFFFF",
+            fillColor: i === 0 && vertices.length >= 3 ? "#B3491F" : "#2E7F25",
             fillOpacity: 1,
-            weight: 2,
+            weight: 2.5,
           }}
         />
       ))}

@@ -8,7 +8,7 @@ AgriImpact maps your field, forecasts **root-zone** soil moisture using real wea
 > - **Root-zone truth** — satellite radar sees only the top ~5 cm; AgriImpact models the crop's actual root zone with an FAO-56 dual-bucket water balance (and shows the surface layer too, side by side).
 > - **Predictive, not descriptive** — the 7-day forecast is a dry-run simulation that predicts *when stress begins* if nothing is done.
 > - **Impact you can audit** — every adopt/skip decision writes water (L), pumping energy (kWh), CO₂e (kg) and yield-protection entries into an MRV ledger with method + provenance, exportable as CSV.
-> - **Open & honest** — free keyless APIs (Open-Meteo, OpenStreetMap), all assumptions documented on the in-app Methodology page.
+> - **Open & honest** — free keyless APIs (Open-Meteo weather, Esri World Imagery satellite basemap), all assumptions documented on the in-app Methodology page.
 
 ---
 
@@ -19,7 +19,7 @@ AgriImpact maps your field, forecasts **root-zone** soil moisture using real wea
 | Framework | Next.js 16 (App Router) + TypeScript 5 |
 | Styling | Tailwind CSS 4, **Space Mono** font, **Banana Leaf `#2E7F25`** brand color |
 | UI | shadcn/ui (New York) + Lucide icons + Recharts |
-| Map | Leaflet + react-leaflet v5 (OpenStreetMap tiles via openstreetmap.de — no API key) |
+| Map | Leaflet + react-leaflet v5 (**Esri World Imagery satellite** basemap — no API key; fields, roads and buildings clearly visible for polygon drawing) |
 | Database | SQLite via Prisma ORM (zero external DB setup) |
 | State | Zustand (client) |
 | Weather | [Open-Meteo](https://open-meteo.com) — observed (ERA5 blend) + forecast (ICON/ECMWF), free, no key |
@@ -136,4 +136,4 @@ This repository was pushed only after:
 
 ## License & data
 
-Code: see repository owner. Data sources: [Open-Meteo](https://open-meteo.com) (CC-BY 4.0, attribution required), OpenStreetMap contributors (ODbL), tiles via openstreetmap.de. Agronomy references: FAO-56 (Allen et al., 1998), FAO-33 production functions.
+Code: see repository owner. Data sources: [Open-Meteo](https://open-meteo.com) (CC-BY 4.0, attribution required); satellite imagery © [Esri](https://www.esri.com/) — Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community. Agronomy references: FAO-56 (Allen et al., 1998), FAO-33 production functions.

@@ -176,9 +176,10 @@
   background: var(--card) !important;
   border-color: var(--border) !important;
 }
-/* dark mode: derive a dark basemap from the light tiles via CSS filter */
+/* dark mode: satellite imagery is a photo, so never invert it — just dim it slightly
+   so the dark UI chrome still feels cohesive while fields stay clearly visible */
 .dark .leaflet-tile-container img {
-  filter: invert(1) hue-rotate(185deg) brightness(0.86) contrast(0.88) saturate(0.75);
+  filter: brightness(0.86) saturate(0.92);
 }
 
 /* terminal-style ticker reveal */

@@ -58,7 +58,8 @@ export async function getWeather(lat: number, lng: number): Promise<WeatherBundl
     forecast_days: String(FORECAST_DAYS),
     timezone: "auto",
   });
-  const url = `https://api.open-meteo.com/v1/forecast?${params.toString()}`;
+  const base = process.env.OPEN_METEO_BASE_URL?.trim() || "https://api.open-meteo.com";
+  const url = `${base}/v1/forecast?${params.toString()}`;
 
   let res: Response;
   try {

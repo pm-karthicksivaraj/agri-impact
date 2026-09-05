@@ -62,7 +62,9 @@ stress begins when depletion > p × TAW      // FAO-56 Table 22 (RAW)`}
               next 7 days). Cached 30 minutes server-side.
             </li>
             <li>
-              <b>Map &amp; tiles:</b> OpenStreetMap data, openstreetmap.de tiles, Leaflet — polygons are drawn by hand
+              <b>Map &amp; tiles:</b> Esri World Imagery (Maxar, Earthstar Geographics &amp; the GIS
+              User Community) — a true satellite basemap so roads, buildings and crop fields are
+              clearly distinguishable when drawing polygons — Leaflet — polygons are drawn by hand
               and measured geodesically (spherical-excess area).
             </li>
             <li>
