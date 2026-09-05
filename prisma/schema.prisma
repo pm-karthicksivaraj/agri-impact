@@ -1,0 +1,98 @@
+// AgriImpact — precision irrigation & measured impact platform
+// SQLite schema (works locally with zero external DB setup)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// A mapped farm field (polygon drawn by the user)
+model Field {
+  id                String   @id @default(cuid())
+  name              String
+  cropType          String // key into CROPS table (engine/crops.ts)
+  soilType          String // key into SOILS table (engine/crops.ts)
+  growthStage       String // initial | development | mid | late
+  region            String
+  ownerName         String
+  ownerRole         String   @default("farmer") // farmer | cooperative | extension
+  polygonJson       String // JSON: [[lat, lng], ...]
+  areaHa            Float
+  centroidLat       Float
+  centroidLng       Float
+  irrigationMethod  String   @default("pump") // pump | gravity | canal
+  isDemo            Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  snapshots     AnalysisSnapshot[]
+  advisories    Advisory[]
+  alerts        AlertEvent[]
+  impactRecords ImpactRecord[]
+}
+
+// Result of one model run (water balance over real weather)
+model AnalysisSnapshot {
+  id              String   @id @default(cuid())
+  fieldId         String
+  field           Field    @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  runAt           DateTime @default(now())
+  modelVersion    String
+  weatherSource   String
+  currentSurface  Float // % of available water, 0-10cm layer
+  currentRootzone Float // % of available water, crop root zone
+  stressDays      Int // forecast days below stress threshold
+  nextIrrigation  Int? // days from run when irrigation is advised (null = none in window)
+  forecastJson    String // full daily series (past + 7-day forecast)
+}
+
+// Actionable recommendation produced by the engine
+model Advisory {
+  id         String    @id @default(cuid())
+  fieldId    String
+  field      Field     @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  createdAt  DateTime  @default(now())
+  runAt      DateTime // analysis run date
+  type       String // irrigation | drainage | protection
+  title      String
+  detail     String
+  windowDay  String? // ISO date when action is advised
+  waterMm    Float // recommended depth (mm)
+  baselineMm Float // what a conventional schedule would apply (mm)
+  savedMm    Float // baseline - recommended (>= 0)
+  status     String    @default("pending") // pending | adopted | dismissed
+  decidedAt  DateTime?
+}
+
+// Rule-engine events (dry stress, heavy rain, heat)
+model AlertEvent {
+  id          String   @id @default(cuid())
+  fieldId     String
+  field       Field    @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  triggeredAt DateTime @default(now())
+  type        String // dry-stress | heavy-rain | heat
+  severity    String // info | warning | critical
+  title       String
+  message     String
+  metricKey   String?
+  metricValue Float?
+  acknowledged Boolean @default(false)
+}
+
+// MRV ledger — one row per measured impact metric, with method provenance
+model ImpactRecord {
+  id         String   @id @default(cuid())
+  fieldId    String
+  field      Field    @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  recordedAt DateTime @default(now())
+  metric     String // water_liters_saved | energy_kwh_avoided | co2_kg_avoided | yield_protection_pct
+  value      Float
+  unit       String // L | kWh | kgCO2e | %ha
+  method     String // short method label
+  inputsJson String // full provenance: inputs, constants, formulas
+  periodDays Int // measurement window the number covers
+}
